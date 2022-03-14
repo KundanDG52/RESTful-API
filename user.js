@@ -1,16 +1,14 @@
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const UserController = require('../controllers/user');
-const checkAuth = require('../middleware/check-auth');
-const User = require('../routes/models/user');
 
-router.post("/signup", UserController.user_signup);
+const userSchema = mongoose.Schema({
+        _id: mongoose.Schema.Types.ObjectId,
+        email: { 
+                type: String,
+                required: true,
+                unique: true,
+                match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        },
+        password: { type: String, required: true }
+});
 
-router.post("/login", UserController.user_login);
-
-router.delete("/:userId", checkAuth, UserController.user_delete);
-
-module.exports = router;
+module.exports = mongoose.model('User', userSchema);
